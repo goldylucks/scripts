@@ -1,0 +1,29 @@
+#!/usr/bin/expect -f
+
+set prompt "#"
+set address [lindex $argv 0]
+
+spawn bluetoothctl 
+expect -re $prompt
+send "remove $address"
+sleep 1
+expect -re $prompt
+send "scan on"
+send_user "
+Sleeping"
+sleep 5
+send_user "
+Done sleeping"
+send "scan off"
+expect "Controller"
+send "trust $address"
+sleep 2
+send "pair $address"
+sleep 2
+send "0000"
+sleep 3
+send_user "
+Should be paired now."
+send "quit"
+expect eof
+
